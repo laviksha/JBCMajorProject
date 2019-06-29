@@ -1,6 +1,15 @@
 package com.gfg.JBCMajorProject.JBCMajorProject.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  long id;
     private String handle;
     private int contribution;
     private int lastOnlineTimeSeconds;
@@ -20,6 +29,14 @@ public class User {
         this.avatar = avatar;
         this.titlePhoto = titlePhoto;
         this.registrationTimeSeconds = registrationTimeSeconds;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getHandle() {
