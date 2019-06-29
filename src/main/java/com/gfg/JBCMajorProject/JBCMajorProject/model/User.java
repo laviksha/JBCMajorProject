@@ -1,97 +1,85 @@
+
 package com.gfg.JBCMajorProject.JBCMajorProject.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+//import org.apache.commons.lang.builder.ToStringBuilder;
 
-@Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "status",
+    "result"
+})
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private  long id;
-    private String handle;
-    private int contribution;
-    private int lastOnlineTimeSeconds;
-    private int friendOfCount;
-    private String avatar;
-    private String titlePhoto;
-    private int registrationTimeSeconds;
 
+    @JsonProperty("status")
+    private String status;
+    @JsonProperty("result")
+    private List<Result> result = null;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public User() {
     }
 
-    public User(String handle, int contribution, int lastOnlineTimeSeconds, int friendOfCount, String avatar, String titlePhoto, int registrationTimeSeconds) {
-        this.handle = handle;
-        this.contribution = contribution;
-        this.lastOnlineTimeSeconds = lastOnlineTimeSeconds;
-        this.friendOfCount = friendOfCount;
-        this.avatar = avatar;
-        this.titlePhoto = titlePhoto;
-        this.registrationTimeSeconds = registrationTimeSeconds;
+    /**
+     * 
+     * @param result
+     * @param status
+     */
+    public User(String status, List<Result> result) {
+        super();
+        this.status = status;
+        this.result = result;
     }
 
-    public long getId() {
-        return id;
+    @JsonProperty("status")
+    public String getStatus() {
+        return status;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @JsonProperty("status")
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getHandle() {
-        return handle;
+    @JsonProperty("result")
+    public List<Result> getResult() {
+        return result;
     }
 
-    public void setHandle(String handle) {
-        this.handle = handle;
+    @JsonProperty("result")
+    public void setResult(List<Result> result) {
+        this.result = result;
     }
 
-    public int getContribution() {
-        return contribution;
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
     }
 
-    public void setContribution(int contribution) {
-        this.contribution = contribution;
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
-    public int getLastOnlineTimeSeconds() {
-        return lastOnlineTimeSeconds;
-    }
-
-    public void setLastOnlineTimeSeconds(int lastOnlineTimeSeconds) {
-        this.lastOnlineTimeSeconds = lastOnlineTimeSeconds;
-    }
-
-    public int getFriendOfCount() {
-        return friendOfCount;
-    }
-
-    public void setFriendOfCount(int friendOfCount) {
-        this.friendOfCount = friendOfCount;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getTitlePhoto() {
-        return titlePhoto;
-    }
-
-    public void setTitlePhoto(String titlePhoto) {
-        this.titlePhoto = titlePhoto;
-    }
-
-    public int getRegistrationTimeSeconds() {
-        return registrationTimeSeconds;
-    }
-
-    public void setRegistrationTimeSeconds(int registrationTimeSeconds) {
-        this.registrationTimeSeconds = registrationTimeSeconds;
+    @Override
+    public String toString() {
+        return "User{" +
+                "status='" + status + '\'' +
+                ", result=" + result +
+                ", additionalProperties=" + additionalProperties +
+                '}';
     }
 }

@@ -1,28 +1,34 @@
 package com.gfg.JBCMajorProject.JBCMajorProject.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gfg.JBCMajorProject.JBCMajorProject.model.Result;
 import com.gfg.JBCMajorProject.JBCMajorProject.model.User;
-import com.gfg.JBCMajorProject.JBCMajorProject.service.UserDao;
-import jdk.nashorn.internal.parser.JSONParser;
-import net.bytebuddy.agent.builder.AgentBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 public class UserController {
-    @Autowired
-   UserDao userDao;
+
 
     @GetMapping("/codeforces/{handle}")
-    public String getUser(@PathVariable("handle") String handle){
+    public List<Result> getUser(@PathVariable("handle") String handle){
         RestTemplate restTemplate=new RestTemplate();
-        JSONParser jsonParser=restTemplate.getForObject(" http://codeforces.com/api/user.info?handles="+handle, JSONParser.class);
-        return jsonParser.toString();
+        String str=restTemplate.getForObject("http://codeforces.com/api/user.info?handles="+handle, String.class);
+        ObjectMapper objectMapper=new ObjectMapper();
+        User user=null;
 
+        try {
+            user=objectMapper.readValue(str,User.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    return user.getResult();
     }
 
 }
