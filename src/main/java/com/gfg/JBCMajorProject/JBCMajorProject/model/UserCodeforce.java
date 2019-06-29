@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.Entity;
 //import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -17,7 +21,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "status",
     "result"
 })
-public class User {
+@Component
+public class UserCodeforce {
 
     @JsonProperty("status")
     private String status;
@@ -30,7 +35,7 @@ public class User {
      * No args constructor for use in serialization
      * 
      */
-    public User() {
+    public UserCodeforce() {
     }
 
     /**
@@ -38,7 +43,7 @@ public class User {
      * @param result
      * @param status
      */
-    public User(String status, List<Result> result) {
+    public UserCodeforce(String status, List<Result> result) {
         super();
         this.status = status;
         this.result = result;
@@ -76,7 +81,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserCodeforce{" +
                 "status='" + status + '\'' +
                 ", result=" + result +
                 ", additionalProperties=" + additionalProperties +
