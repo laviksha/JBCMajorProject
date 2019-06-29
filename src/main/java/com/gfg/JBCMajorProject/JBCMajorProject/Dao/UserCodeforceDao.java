@@ -1,4 +1,4 @@
-package com.gfg.JBCMajorProject.JBCMajorProject.service;
+package com.gfg.JBCMajorProject.JBCMajorProject.Dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gfg.JBCMajorProject.JBCMajorProject.model.Result;

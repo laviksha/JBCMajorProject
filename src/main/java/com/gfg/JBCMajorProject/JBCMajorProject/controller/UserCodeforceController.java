@@ -1,7 +1,7 @@
 package com.gfg.JBCMajorProject.JBCMajorProject.controller;
 
 import com.gfg.JBCMajorProject.JBCMajorProject.model.Result;
-import com.gfg.JBCMajorProject.JBCMajorProject.service.UserCodeforceDao;
+import com.gfg.JBCMajorProject.JBCMajorProject.Dao.UserCodeforceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
