@@ -1,7 +1,14 @@
 package com.gfg.JBCMajorProject.JBCMajorProject.dao;
 
+import com.gfg.JBCMajorProject.JBCMajorProject.model.TestRedis;
 import com.gfg.JBCMajorProject.JBCMajorProject.model.TimelineStatus;
+import com.gfg.JBCMajorProject.JBCMajorProject.repository.RedisConfig;
+import com.gfg.JBCMajorProject.JBCMajorProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -10,21 +17,18 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class TwitterDao {
     @Autowired
     TimelineStatus timelineStatus;
-    public TwitterFactory setAuthentications(){
-        //Twitter twitter = new TwitterFactory().getInstance();
-        // Twitter Consumer key & Consumer Secret
-        //twitter.setOAuthConsumer("vj3kOTwbXPdYAjPo4JIHfuC2Y", "c3g25oAcyKBLB3wlxkviqKDJCzYpXfhdmOGHbtUjzzLRAzvFTs");
-        // Twitter Access token & Access token Secret
-       // twitter.setOAuthAccessToken(new AccessToken("1144873793346609152-7Ap6Kr0ME1oh2P1Bw4MHWnee4fpjfZ",
-             //   "mEjrVgqZePbO1ij4KOfEX82jaLuVaSidaEi3iu00keiMH"));
+    @Autowired
+    UserRepository userRepository;
 
-
+    public TwitterFactory createAuthentications(){
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
                 .setOAuthConsumerKey("vj3kOTwbXPdYAjPo4JIHfuC2Y")
@@ -36,11 +40,15 @@ public class TwitterDao {
     return tf;
     }
 
-    public List<TimelineStatus> getTimeline(){
-        TwitterFactory tf=setAuthentications();
+    @Autowired RedisTemplate<String, String> redisTemplate;
+    public Map<String,String> getTimeline(){
+        TwitterFactory tf=createAuthentications();
         Twitter twitter = tf.getInstance();
+        //ConfigurableApplicationContext ctx=new AnnotationConfigApplicationContext(RedisConfig.class);
+        // RedisTemplate<String, String> redisTemplate= (RedisTemplate<String, String>) ctx.getBean("redisTemplate");
 
-       // Twitter twitter = TwitterFactory.getSingleton();
+        HashOperations hashOperations=redisTemplate.opsForHash();
+
         List<Status> statuses = null;
         try {
             statuses = twitter.getHomeTimeline();
@@ -48,15 +56,22 @@ public class TwitterDao {
             e.printStackTrace();
         }
         System.out.println("Showing home timeline.");
-
         List<TimelineStatus> list=new ArrayList<TimelineStatus>();
-
+        Map<String,String> mp=new HashMap<String, String>();
         for (Status status : statuses) {
-            timelineStatus.setName(status.getUser().getName());
-            timelineStatus.setText(status.getText());
-            list.add(timelineStatus);
+            String name=status.getUser().getName();
+            if(mp.containsKey(name)){
+                String temp=mp.get(name);
+                temp+=status.getText();
+                mp.put(name,temp);
+            }
+            else mp.put(name,status.getText());
+
         }
 
-        return list;
+        for (Map.Entry<String,String> entry:mp.entrySet()){
+            hashOperations.put(entry.getKey(),entry.getKey(),entry.getValue());
+        }
+        return mp;
     }
 }
